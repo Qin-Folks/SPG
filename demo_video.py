@@ -16,7 +16,7 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 
 # custom includes
-import models.google.inception3_spg as inceptionv3_spg
+from . import models.google.inception3_spg as inceptionv3_spg
 
 # some general settings
 mean_vals = [0.485, 0.456, 0.406]
@@ -55,10 +55,10 @@ def load_model(args):
 
     # to match the names in pretrained model
     pretrained_dict = OrderedDict()
-    for ki in checkpoint['state_dict'].keys():
+    for ki in list(checkpoint['state_dict'].keys()):
         pretrained_dict[ki[7:]] = deepcopy(checkpoint['state_dict'][ki])
     model.load_state_dict(pretrained_dict)
-    print('Loaded checkpoint: {}'.format(args.snapshots))
+    print(('Loaded checkpoint: {}'.format(args.snapshots)))
 
     return model
 

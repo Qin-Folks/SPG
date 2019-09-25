@@ -27,7 +27,7 @@ from utils.LoadData import data_loader2, data_loader
 from utils.Restore import restore
 
 ROOT_DIR = '/'.join(os.getcwd().split('/')[:-1])
-print 'Project Root Dir:',ROOT_DIR
+print('Project Root Dir:',ROOT_DIR)
 
 IMG_DIR=os.path.join(ROOT_DIR,'data','ILSVRC','Data','CLS-LOC','train')
 SNAPSHOT_DIR=os.path.join(ROOT_DIR,'snapshot_bins')
@@ -78,7 +78,7 @@ def save_checkpoint(args, state, is_best, filename='checkpoint.pth.tar'):
 def get_model(args):
     model = eval(args.arch).Inception3(num_classes=args.num_classes, args=args, threshold=args.threshold)
 
-    model = torch.nn.DataParallel(model, range(args.num_gpu))
+    model = torch.nn.DataParallel(model, list(range(args.num_gpu)))
     model.cuda()
 
     optimizer = my_optim.get_optimizer(args, model)
@@ -163,11 +163,11 @@ def val(args, model=None, current_epoch=0):
 
 
     if args.onehot=='True':
-        print val_mAP
-        print 'AVG:', np.mean(val_mAP)
+        print(val_mAP)
+        print('AVG:', np.mean(val_mAP))
 
     else:
-        print('Top1:', top1.avg, 'Top5:',top5.avg)
+        print(('Top1:', top1.avg, 'Top5:',top5.avg))
 
 
     # save_name = os.path.join(args.snapshot_dir, 'val_result.txt')
@@ -196,8 +196,8 @@ def cal_mAP(logits0, label_var, prob, gt):
 if __name__ == '__main__':
     args = get_arguments()
     import json
-    print 'Running parameters:\n'
-    print json.dumps(vars(args), indent=4, separators=(',', ':'))
+    print('Running parameters:\n')
+    print(json.dumps(vars(args), indent=4, separators=(',', ':')))
     if not os.path.exists(args.snapshot_dir):
         os.mkdir(args.snapshot_dir)
     val(args)

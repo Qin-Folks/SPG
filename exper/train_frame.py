@@ -22,7 +22,7 @@ from utils.LoadData import data_loader, data_loader2
 from utils.Restore import restore
 
 ROOT_DIR = '/'.join(os.getcwd().split('/')[:-1])
-print 'Project Root Dir:',ROOT_DIR
+print('Project Root Dir:',ROOT_DIR)
 
 IMG_DIR=os.path.join(ROOT_DIR,'data','ILSVRC','Data','CLS-LOC','train')
 SNAPSHOT_DIR=os.path.join(ROOT_DIR,'snapshot_bins')
@@ -80,7 +80,7 @@ def get_model(args):
                                   threshold=args.threshold,
                                   args=args)
     model.cuda()
-    model = torch.nn.DataParallel(model, range(args.num_gpu))
+    model = torch.nn.DataParallel(model, list(range(args.num_gpu)))
 
     optimizer = my_optim.get_finetune_optimizer(args, model)
 
@@ -110,7 +110,7 @@ def train(args):
     current_epoch = args.current_epoch
     end = time.time()
     max_iter = total_epoch*len(train_loader)
-    print('Max iter:', max_iter)
+    print(('Max iter:', max_iter))
     while current_epoch < total_epoch:
         model.train()
         losses.reset()
@@ -159,14 +159,14 @@ def train(args):
                 eta_str = "{:0>8}".format(datetime.timedelta(seconds=int(eta_seconds)))
                 eta_seconds_epoch = steps_per_epoch*batch_time.avg
                 eta_str_epoch = "{:0>8}".format(datetime.timedelta(seconds=int(eta_seconds_epoch)))
-                print('Epoch: [{0}][{1}/{2}]\t'
+                print(('Epoch: [{0}][{1}/{2}]\t'
                       'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
                       'ETA {eta_str}({eta_str_epoch})\t'
                       'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
                       'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
                       'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
                     current_epoch, global_counter%len(train_loader), len(train_loader), batch_time=batch_time,
-                    eta_str=eta_str, eta_str_epoch = eta_str_epoch, loss=losses, top1=top1, top5=top5))
+                    eta_str=eta_str, eta_str_epoch = eta_str_epoch, loss=losses, top1=top1, top5=top5)))
 
         if current_epoch % 1 == 0:
             save_checkpoint(args,
@@ -187,8 +187,8 @@ def train(args):
 
 if __name__ == '__main__':
     args = get_arguments()
-    print 'Running parameters:\n'
-    print json.dumps(vars(args), indent=4, separators=(',', ':'))
+    print('Running parameters:\n')
+    print(json.dumps(vars(args), indent=4, separators=(',', ':')))
     if not os.path.exists(args.snapshot_dir):
         os.mkdir(args.snapshot_dir)
     train(args)
